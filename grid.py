@@ -98,13 +98,28 @@ class GridWorldEnv(gym.Env):
     def _location_to_index(self, location):
         return location[0] + location[1] * self.size
 
-"""
-
-|_ _ _ _ _
-|_ _ _ _ _ 
-|_ _ _ _ _ 
-|_ _ _ _ _ 
-|_ _ _ _ _ 
-
-"""
+def render_grid_policy(policy, size):
+    action_mapping = {
+        0: "→",  # right
+        1: "↑",  # up
+        2: "←",  # left
+        3: "↓",  # down
+    }
+    # Create a grid (rows) to hold the best action for each state.
+    grid_render = [["." for _ in range(size)] for _ in range(size)]
+    # For each state, find its best action (assumed to be one-hot encoded)
+    for state, action_dist in enumerate(policy):
+        # Get the best action (if multiple are optimal the policy should be modified accordingly)
+        best_action = np.where(action_dist == 1)[0][0]
+        # Convert state index to grid location:
+        # Using the same encoding as in grid.py: [index % size, index // size]
+        col = state % size
+        row = state // size
+        # Adjust row ordering for rendering (grid.py uses bottom row as index 0)
+        render_row = size - 1 - row
+        grid_render[render_row][col] = action_mapping[best_action]
+    
+    # Print the grid row by row
+    for row in grid_render:
+        print(" ".join(row))
 
