@@ -62,9 +62,9 @@ class MonteCarloAgent():
 
 
 if __name__ == "__main__":
-    from grid import GridWorldEnv,render_grid_policy
+    from grid import GridWorldEnv
     env = GridWorldEnv(size=5)
     agent = MonteCarloAgent(env, num_episodes=1)
     agent.mc_basic()
     print("Policy Grid:")
-    render_grid_policy(agent.policy, env.size)
+    env.render_policy(agent.policy)
